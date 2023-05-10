@@ -1,12 +1,8 @@
 import { display } from './Display.js';
+import { getFromStorage, saveToStorage } from "./Storage.js";
 
 export const checkTaskDone = (e, indexNo) => {
-  const lists = localStorage.getItem('toDoList');
-  const get = JSON.parse(lists);
-  let tasks = [];
-  if (get) {
-    tasks = get;
-  }
+let tasks = getFromStorage();
 
 const todoList = e.currentTarget.parentNode;
 
@@ -14,7 +10,7 @@ const todoList = e.currentTarget.parentNode;
     tasks.forEach((taskItem) => {
       if (taskItem.index === indexNo) {
         taskItem.completed = false;
-        localStorage.setItem('toDoList', JSON.stringify(tasks));
+        saveToStorage(tasks);
       }
     });
     display();
@@ -24,7 +20,7 @@ const todoList = e.currentTarget.parentNode;
     tasks.forEach((taskItem) => {
       if (taskItem.index === indexNo) {
         taskItem.completed = true;
-        localStorage.setItem('toDoList', JSON.stringify(tasks));
+        saveToStorage(tasks);
       }
     });
     display();
@@ -32,15 +28,10 @@ const todoList = e.currentTarget.parentNode;
 };
 
 export const clearTasks = (e) => {
-  const lists = localStorage.getItem('toDoList');
-  const get = JSON.parse(lists);
-  let tasks = [];
-  if (get) {
-    tasks = get;
-  }
+let tasks = getFromStorage();
 
   const newTasks = tasks.filter((item) => item.completed === false);
-  localStorage.setItem('toDoList', JSON.stringify(newTasks));
+  saveToStorage(newTasks);
 
   display();
 };

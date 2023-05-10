@@ -1,27 +1,17 @@
-export const addTask = (description) => {
-  const lists = localStorage.getItem('toDoList');
-  const get = JSON.parse(lists);
-  let tasks = [];
-  if (get) {
-    tasks = get;
-  }
+import { getFromStorage, saveToStorage } from "./Storage.js";
 
+export const addTask = (description) => {
+  let tasks = getFromStorage();
   tasks.push({
     description,
     completed: false,
     index: tasks.length,
   });
-  localStorage.setItem('toDoList', JSON.stringify(tasks));
+  saveToStorage(tasks);
 };
 
 export const removeTask = (indexNo) => {
-  const lists = localStorage.getItem('toDoList');
-  const get = JSON.parse(lists);
-  let tasks = [];
-  if (get) {
-    tasks = get;
-  }
-
+let tasks = getFromStorage();
   tasks.splice(indexNo, 1);
-  localStorage.setItem('toDoList', JSON.stringify(tasks));
+  saveToStorage(tasks);
 };

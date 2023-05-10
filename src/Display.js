@@ -1,17 +1,15 @@
 import { editItem, saveEdit } from './Edits.js';
 import { addTask, removeTask } from './AddRemoveTask.js';
 import { checkTaskDone } from './CheckAndClear.js';
+import { getFromStorage, saveToStorage } from "./Storage.js";
 
 const toDoList = document.getElementById('to-do-list');
 toDoList.classList.add('list');
 
 export const display = () => {
-  const lists = localStorage.getItem('toDoList');
-  const get = JSON.parse(lists);
-  let tasks = [];
-  if (get) {
+let tasks = getFromStorage();
+  if (tasks) {
     toDoList.innerHTML = '';
-    tasks = get;
     toDoList.style.display = 'block';
     tasks.forEach((item, indexNo) => {
       item.index = indexNo;
@@ -43,6 +41,7 @@ export const display = () => {
       saveBtn.className = 'edit-btn-save';
       saveBtn.innerHTML = '<p>Save</p>';
       saveBtn.style.display = 'none';
+      saveBtn.style.marginLeft = "auto";
 
       const editBtn = document.createElement('button');
       editBtn.className = 'edit-btn';
@@ -82,7 +81,7 @@ export const display = () => {
       listItem.appendChild(move);
       toDoList.appendChild(listItem);
     });
-    localStorage.setItem('toDoList', JSON.stringify(tasks));
+    saveToStorage(tasks);
   }
 };
 
@@ -90,22 +89,23 @@ window.addEventListener('DOMContentLoaded', (e) => {
   display();
   const form = document.getElementById('add-task-form');
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const taskInput = document.getElementById('add-task');
+  const handleAddTask = () => {
+    const taskInput = document.getElementById("add-task");
     const description = taskInput.value;
     addTask(description);
-    taskInput.value = '';
+    taskInput.value = "";
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleAddTask();
     display();
   });
 
   const enter = document.querySelector('#submit-task');
   enter.addEventListener('click', (e) => {
     e.preventDefault();
-    const taskInput = document.getElementById('add-task');
-    const description = taskInput.value;
-    addTask(description);
-    taskInput.value = '';
+    handleAddTask();
     display();
   });
 });
